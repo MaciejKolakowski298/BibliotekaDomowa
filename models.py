@@ -10,11 +10,10 @@ class Biblioteka:
             self.biblioteka = []
 
     def all(self):
-        print(self.biblioteka)
         return self.biblioteka
 
     def get(self, id):
-        return self.biblioteka[id]
+        return self.biblioteka[id - 1]
 
     def create(self, data):
         data.pop('csrf_token')
@@ -24,10 +23,25 @@ class Biblioteka:
         with open("biblioteka.json", "w") as f:
             json.dump(self.biblioteka, f)
 
+
     def update(self, id, data):
         data.pop('csrf_token')
-        self.biblioteka[id] = data
-        self.save_all()
+        ksiazka = self.get(id)
+        if ksiazka:
+            index = self.biblioteka.index(ksiazka)
+            self.biblioteka[index] = data
+            self.save_all()
+            return True
+        return False
+    
+    def delete(self, id):
+        ksiazka = self.get(id)
+        if ksiazka:
+            self.biblioteka.remove(ksiazka)
+            self.save_all()
+            return True
+        return False
+
 
 
 biblioteka = Biblioteka()
